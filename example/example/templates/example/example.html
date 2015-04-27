@@ -1,0 +1,36 @@
+{% extends 'example/base.html' %}
+{% load i18n bettertemplates_tags %}
+
+{% block content %}
+    
+    <h1>Django Better Templates - Example</h1>
+    
+	{% includeblock 'example/includable_template.html' with myvar='Inline context variables' %}
+	
+	    {% block myblock %}
+	        <div style="border: 1px solid orange; padding: 10px;"> 
+	           <p>This inner block is rendered in a template variable in the included template.</p>
+	           <p>(The variable must have the same name as the block.)</p>
+	           {% with inner_var='django filters' %}
+	               <p>It is identical with regular django templates and supports everything like <b>{% trans "Template Tags" %}</b> and <b>{{ inner_var|upper }}</b>.</p>
+	           {% endwith %}
+	           <p>Note also how <u>{{ myvar }}</u> are supported.
+	        </div>
+	    {% endblock myblock %}
+	    
+	    {% block mysecondblock %}
+	        <div style="border: 1px solid green; padding: 10px;"> 
+	           A second Block.
+	        </div>
+	    {% endblock mysecondblock %}
+	    
+	    {% block anotherblock %}
+	        This content is never rendered because the inner block is not referenced in the included template!
+	    {% endblock %}
+	    
+	    <b>This content is never rendered because it appears outside inner blocks!</b>
+	    
+	{% endincludeblock %}
+		
+    
+{% endblock content%}
