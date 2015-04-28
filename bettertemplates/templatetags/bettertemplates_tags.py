@@ -8,6 +8,7 @@ from django.template.loader import get_template
 from django.template.loader_tags import do_include, BlockNode
 
 import six
+from copy import copy
 
 register = template.Library()
 
@@ -27,10 +28,16 @@ def do_include_block(parser, token):
                 <b>This content is never rendered because it appears outside inner blocks!</b>
             {% endincludeblock %}
     """
+    # inherit behaviour form ``include`` templatetag
     include_node = do_include(parser, token)
-    nodelist = parser.parse(('endincludeblock',))
-    parser.delete_first_token()
     
+    # make the parser "forget" any blocks encountered in the inner includeblock, 
+    # so duplicate blocks don't cause a TemplateSyntaxError
+    loaded_blocks = copy(parser.__loaded_blocks)
+    nodelist = parser.parse(('endincludeblock',))
+    parser.__loaded_blocks = loaded_blocks
+    
+    parser.delete_first_token()
     return IncludeBlockNode(nodelist, include_node)
 
 
