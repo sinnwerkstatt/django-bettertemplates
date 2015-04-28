@@ -31,9 +31,10 @@ def do_include_block(parser, token):
     # inherit behaviour form ``include`` templatetag
     include_node = do_include(parser, token)
     
-    # make the parser "forget" any blocks encountered in the inner includeblock, 
+    # we give the parser a new "context" of blocks encountered in the inner includeblock, 
     # so duplicate blocks don't cause a TemplateSyntaxError
     loaded_blocks = copy(parser.__loaded_blocks)
+    parser.__loaded_blocks = []
     nodelist = parser.parse(('endincludeblock',))
     parser.__loaded_blocks = loaded_blocks
     
@@ -81,9 +82,14 @@ class IncludeBlockNode(template.Node):
                 context.update(values)
                 
             # render each named block in the inner block into a context variable
-            for block in self.nodelist.get_nodes_by_type(BlockNode):
-                values[block.name] = block.nodelist.render(context)#block_output
+            block_list = self.nodelist.get_nodes_by_type(BlockNode)
+            while block_list:
+                block = block_list[0]
+                values[block.name] = block.nodelist.render(context)
                 del self.nodelist[self.nodelist.index(block)]
+                # we refresh the block list after each iteration, because if block B was contained in block A that we
+                # just rendered, block B will have been removed from the nodelist after rendering
+                block_list = self.nodelist.get_nodes_by_type(BlockNode)
                 
             # render the included template
             output = self.include_node.template.render(context)
