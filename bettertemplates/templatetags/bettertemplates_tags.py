@@ -33,10 +33,14 @@ def do_include_block(parser, token):
     
     # we give the parser a new "context" of blocks encountered in the inner includeblock, 
     # so duplicate blocks don't cause a TemplateSyntaxError
-    loaded_blocks = copy(parser.__loaded_blocks)
-    parser.__loaded_blocks = []
+    loaded_blocks = None
+    if hasattr(parser, '__loaded_blocks'):
+        loaded_blocks = copy(parser.__loaded_blocks)
+        parser.__loaded_blocks = []
     nodelist = parser.parse(('endincludeblock',))
-    parser.__loaded_blocks = loaded_blocks
+    
+    if loaded_blocks is not None:
+        parser.__loaded_blocks = loaded_blocks
     
     parser.delete_first_token()
     return IncludeBlockNode(nodelist, include_node)
