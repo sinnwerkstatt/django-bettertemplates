@@ -94,7 +94,8 @@ class IncludeBlockNode(template.Node):
                 # we refresh the block list after each iteration, because if block B was contained in block A that we
                 # just rendered, block B will have been removed from the nodelist after rendering
                 block_list = self.nodelist.get_nodes_by_type(BlockNode)
-                
+            context.update(values)
+            
             # render the included template
             output = self.include_node.template.render(context)
                 
@@ -103,7 +104,7 @@ class IncludeBlockNode(template.Node):
             
             return output
         except:
-            if settings.TEMPLATE_DEBUG:
+            if settings.DEBUG:
                 raise
             return ''
         
