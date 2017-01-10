@@ -71,7 +71,7 @@ class IncludeBlockNode(template.Node):
             #     self.template as Template
             if not hasattr(self.include_node, 'template'):
                 self.include_node.template = self.include_node.template_name
-            if not isinstance(self.include_node.template, Template):
+            if not isinstance(self.include_node.template, Template) and callable(getattr(self.include_node.template, 'resolve', None)): 
                 # django >= 1.7
                 self.include_node.template = self.include_node.template.resolve(context)
                 if not callable(getattr(self.include_node.template, 'render', None)):
