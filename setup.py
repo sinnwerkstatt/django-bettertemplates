@@ -4,11 +4,8 @@
 import os
 import sys
 
+from setuptools import setup, find_packages
 
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
 
 if sys.argv[-1] == 'publish':
     os.system('python setup.py sdist upload')
@@ -25,10 +22,7 @@ setup(
     author='Sinnwerkstatt Medienagentur GmbH',
     author_email='web@sinnwerkstatt.com',
     url='https://github.com/sinnwerkstatt/django-bettertemplates',
-    packages=[
-        'bettertemplates',
-    ],
-    package_dir={'bettertemplates': 'bettertemplates'},
+    packages=find_packages(exclude=['example']),
     include_package_data=True,
     install_requires=['six'],
     license="BSD",
