@@ -1,9 +1,6 @@
-===============================
-Django Better Templates
-===============================
+# Django Better Templates
 
-Features
-========
+## Features
 
 Adds an ``{% includeblock <template_name> ... %}`` template tag. 
 
@@ -16,8 +13,7 @@ The includeblock templatetag re-uses django template rendering code and should b
 Compatible with: Django >= 1.5 (up to Django 1.8)
 
 
-Installation
-============
+## Installation
 
 Install this django app (no pypi yet, sorry) and add the app to your installed_apps:
 
@@ -32,8 +28,8 @@ INSTALLED_APPS = (
 
 
 
-Example
-=======
+## Example
+
 
 ### Main Template 
 
